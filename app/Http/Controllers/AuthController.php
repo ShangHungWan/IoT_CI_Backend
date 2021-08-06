@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Http\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    private $repo;
+    private $service;
 
-    public function __construct(UserRepositoryInterface $repo)
+    public function __construct(AuthService $service)
     {
-        $this->repo = $repo;
+        $this->service = $service;
     }
 
     /**
@@ -31,27 +31,42 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return response('success');
+            return response([
+                'message' => 'success',
+            ], 200);
         }
 
-        return response('error');
+        return response([
+            'message' => 'failed',
+        ], 400);
     }
 
     public function register(Request $request)
     {
-        $credentials = $request->validate([
+        $attrributes = $request->validate([
             'name' => ['required'],
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        $credentials['password'] = bcrypt($credentials['password']);
+        $attrributes['password'] = bcrypt($attrributes['password']);
 
-        return $this->repo->create($credentials);
+        return $this->service->create($attrributes);
     }
 
-    public function all(Request $request)
+    public function me()
     {
-        return $this->repo->all();
+        return Auth::user();
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response([
+            'message' => 'success',
+        ], 200);
     }
 }
