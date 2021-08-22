@@ -49,8 +49,6 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        $attrributes['password'] = bcrypt($attrributes['password']);
-
         return $this->service->create($attrributes);
     }
 

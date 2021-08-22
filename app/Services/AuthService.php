@@ -15,6 +15,9 @@ class AuthService
 
     public function create($attrributes)
     {
+        $attrributes['password'] = bcrypt($attrributes['password']);
+        $attrributes['type'] = 'user';
+
         return $this->repo->create($attrributes);
     }
 }
