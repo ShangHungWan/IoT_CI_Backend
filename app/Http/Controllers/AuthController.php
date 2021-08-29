@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\AuthService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -23,12 +24,18 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $validated = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
+            'remember' => ['required', 'boolean'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        $credentials = Arr::only($validated, [
+            'email',
+            'password',
+        ]);
+
+        if (Auth::attempt($credentials, $validated['remember'])) {
             $request->session()->regenerate();
 
             return response([
