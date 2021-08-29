@@ -21,7 +21,7 @@ class FileController extends Controller
      */
     public function index()
     {
-        //
+        return $this->service->index();
     }
 
     /**
@@ -48,7 +48,7 @@ class FileController extends Controller
      */
     public function show(File $file)
     {
-        //
+        return $file;
     }
 
     /**
@@ -71,6 +71,6 @@ class FileController extends Controller
      */
     public function destroy(File $file)
     {
-        //
+        $file->delete();
     }
 }

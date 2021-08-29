@@ -27,7 +27,10 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::group(['prefix' => 'files', 'middleware', 'auth:sanctum'], function () {
+    Route::get('/', [FileController::class, 'index']);
+    Route::get('/{file}', [FileController::class, 'show']);
     Route::post('/', [FileController::class, 'store']);
+    Route::delete('/{file}', [FileController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'devices'], function () {

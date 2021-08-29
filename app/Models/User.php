@@ -43,6 +43,6 @@ class User extends Authenticatable
 
     public function files()
     {
-        return $this->hasMany(File::class);
+        return $this->hasMany(File::class, 'author_id');
     }
 }

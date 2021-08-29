@@ -15,6 +15,16 @@ class FileService
         $this->repo = $repo;
     }
 
+    public function index()
+    {
+        $user = Auth::user();
+        if ("admin" === $user->type) {
+            return $this->repo->all();
+        } else if ("user" === $user->type) {
+            return Auth::user()->files;
+        }
+    }
+
     public function create($file)
     {
         $path = $file->storeAs('file', Str::uuid() . "." . $file->extension());
