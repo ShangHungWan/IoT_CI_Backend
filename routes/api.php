@@ -26,6 +26,11 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 
-Route::group(['prefix' => 'files'], function () {
+Route::group(['prefix' => 'files', 'middleware', 'auth:sanctum'], function () {
     Route::post('/', [FileController::class, 'store']);
+});
+
+Route::group(['prefix' => 'devices'], function () {
+    Route::get('/', [DeviceController::class, 'index']);
+    Route::post('/', [DeviceController::class, 'store'])->middleware('admin');
 });
