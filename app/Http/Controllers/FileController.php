@@ -40,6 +40,11 @@ class FileController extends Controller
         return $this->service->create($attrributes['file']);
     }
 
+    public function versions(Request $request, $filename)
+    {
+        return $this->service->versions($filename);
+    }
+
     /**
      * Display the specified resource.
      *

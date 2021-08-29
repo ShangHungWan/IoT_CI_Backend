@@ -45,4 +45,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(File::class, 'author_id');
     }
+
+    public function file_versions($filename)
+    {
+        return $this->hasMany(File::class, 'author_id')
+            ->where('original_filename', $filename);
+    }
 }

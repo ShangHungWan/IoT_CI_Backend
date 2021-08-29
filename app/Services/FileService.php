@@ -35,4 +35,15 @@ class FileService
         ];
         return $this->repo->create($attrributes);
     }
+
+    public function versions($filename)
+    {
+        $user = Auth::user();
+        if ("admin" === $user->type) {
+            return $this->repo->all();
+        } else if ("user" === $user->type) {
+            return $user->file_versions($filename)
+                ->get();
+        }
+    }
 }

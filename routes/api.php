@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\FileController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,10 @@ Route::group(['prefix' => 'files', 'middleware', 'auth:sanctum'], function () {
     Route::get('/{file}', [FileController::class, 'show']);
     Route::post('/', [FileController::class, 'store']);
     Route::delete('/{file}', [FileController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'versions', 'middleware', 'auth:sanctum'], function () {
+    Route::get('/{filename}', [FileController::class, 'versions']);
 });
 
 Route::group(['prefix' => 'devices'], function () {
