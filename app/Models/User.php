@@ -41,14 +41,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function files()
+    public function analyses()
     {
-        return $this->hasMany(File::class, 'author_id');
-    }
-
-    public function file_versions($filename)
-    {
-        return $this->hasMany(File::class, 'author_id')
-            ->where('original_filename', $filename);
+        return $this->hasMany(Analysis::class, 'user_id');
     }
 }

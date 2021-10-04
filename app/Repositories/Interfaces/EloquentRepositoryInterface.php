@@ -9,15 +9,9 @@ interface EloquentRepositoryInterface
 {
     public function all(array $columns = ['*']): Collection;
 
-    /**
-     * @param array $attributes
-     * @return Model
-     */
     public function create(array $attributes): Model;
 
-    /**
-     * @param $id
-     * @return Model
-     */
-    public function find($id): ?Model;
+    public function find(int $id): ?Model;
+
+    public function update(Model $model, array $attributes): Model;
 }

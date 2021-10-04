@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DeviceController;
-use App\Http\Controllers\FileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,19 +23,21 @@ Route::group(['prefix' => 'users', 'middleware' => 'auth:sanctum'], function () 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
-    Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
 });
 
-Route::group(['prefix' => 'files', 'middleware', 'auth:sanctum'], function () {
-    Route::get('/', [FileController::class, 'index']);
-    Route::get('/{file}', [FileController::class, 'show']);
-    Route::post('/', [FileController::class, 'store']);
-    Route::delete('/{file}', [FileController::class, 'destroy']);
-});
+Route::group(['prefix' => 'analyses', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('/', [AnalysisController::class, 'index']);
+    Route::post('/', [AnalysisController::class, 'store']);
 
-Route::group(['prefix' => 'versions', 'middleware', 'auth:sanctum'], function () {
-    Route::get('/{filename}', [FileController::class, 'versions']);
+    Route::group(['prefix' => '{analysis:uuid}'], function () {
+        Route::get('/', [AnalysisController::class, 'show']);
+        Route::post('/dynamic', [AnalysisController::class, 'storeDynamic']);
+    });
 });
 
 Route::group(['prefix' => 'devices'], function () {

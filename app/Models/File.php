@@ -10,17 +10,15 @@ class File extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public $timestamp = ["created_at"];
-    const UPDATED_AT = null;
+    public $timestamps = false;
 
     protected $fillable = [
-        'author_id',
-        'original_filename',
+        'analysis_uuid',
         'path',
     ];
 
-    public function author()
+    public function static_logs()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(StaticLog::class);
     }
 }

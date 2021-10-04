@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFilesTable extends Migration
+class CreateFiles extends Migration
 {
     /**
      * Run the migrations.
@@ -15,11 +15,8 @@ class CreateFilesTable extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('author_id')->constrained('users', 'id');
-            $table->string('original_filename');
-            $table->string('path');
-            $table->timestamp('created_at');
-            $table->timestamp('deleted_at')->nullable();
+            $table->foreignUuid('analysis_uuid')->constrained('analyses', 'uuid');
+            $table->string('path', 1024);
         });
     }
 
