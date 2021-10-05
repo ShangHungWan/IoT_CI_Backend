@@ -36,7 +36,7 @@ Route::group(['prefix' => 'analyses', 'middleware' => 'auth:sanctum'], function 
 
     Route::group(['prefix' => '{analysis:uuid}'], function () {
         Route::get('/', [AnalysisController::class, 'show']);
-        Route::post('/dynamic', [AnalysisController::class, 'storeDynamic']);
+        Route::post('/dynamic', [AnalysisController::class, 'storeDynamic'])->withoutMiddleware('auth:sanctum');
     });
 });
 
