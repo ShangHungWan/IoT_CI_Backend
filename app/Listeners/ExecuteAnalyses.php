@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\ApplicationEmulated;
 use App\Events\FileUploaded;
 use App\Repositories\Interfaces\AnalysisRepositoryInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,8 +12,12 @@ use Symfony\Component\Process\Process;
 
 class ExecuteAnalyses implements ShouldQueue
 {
-    const FAILED = 'failed';
+    const EMLATION_FAILED = 'emulation_failed';
+    const COMPILATION_FAILED = 'compilation_failed';
     const SUCCESS = 'success';
+
+    public $timeout = 600;
+
     private $analysis_repository;
 
     /**
@@ -33,17 +38,27 @@ class ExecuteAnalyses implements ShouldQueue
      */
     public function handle(FileUploaded $event)
     {
-        $process = new Process(['sudo ' . config('iotci.path.STATIC_ANALYSIS_SHELL'), $event->analysis->uuid, $event->analysis->device_id, base_path('storage/app/file'), '/home/ubuntu/Logs']);
+        $process = new Process([
+            'sudo',
+            config('iotci.path.STATIC_ANALYSIS_SHELL'),
+            $event->analysis->uuid,
+            $event->analysis->device_id,
+            base_path('storage/app/file'),
+            config('iotci.path.LOG_FOLDER'),
+        ]);
         $process->setTimeout(600);
+        $process->setIdleTimeout(600);
         $process->run();
 
         if (!$process->isSuccessful()) {
             Log::error('UUID: ' . $event->analysis->uuid . '\'s static analysis failed.');
+            $this->analysis_repository->update($event->analysis, [
+                'status' => config('iotci.analysis.status.EMULATION_FAILED'),
+            ]);
             throw new ProcessFailedException($process);
         }
 
-        $output = $process->getOutput();
-
+        $output = trim($process->getOutput());
         Log::debug('[' . $event->analysis->uuid . ']:' . $output);
 
         $this->analysis_repository->update($event->analysis, [
@@ -51,16 +66,20 @@ class ExecuteAnalyses implements ShouldQueue
         ]);
 
         if (self::SUCCESS === $output) {
-            // trigger event to search file and insert records
+            ApplicationEmulated::dispatch($event->analysis);
         }
     }
 
     private function getStatus(string $message)
     {
-        if (self::FAILED === $message) {
-            return config('iotci.analysis.status.EMULATE_FAILED');
+        if (self::EMLATION_FAILED === $message) {
+            return config('iotci.analysis.status.EMULATION_FAILED');
+        } else if (self::COMPILATION_FAILED === $message) {
+            return config('iotci.analysis.status.COMPILATION_FAILED');
         } else if (self::SUCCESS === $message) {
             return config('iotci.analysis.status.TESTING');
+        } else {
+            return config('iotci.analysis.status.EMULATION_FAILED');
         }
     }
 }
