@@ -5,7 +5,7 @@ return [
         'status' => [
             'SUCCESS' => 'success',
             'TESTING' => 'testing',
-            'EMULATION_FAILED' => 'emulation_failed' ,
+            'EMULATION_FAILED' => 'emulation_failed',
             'COMPILATION_FAILED' => 'compilation_failed',
             'UPLOADED' => 'uploaded',
         ],
@@ -29,5 +29,6 @@ return [
 
     'path' => [
         'STATIC_ANALYSIS_SHELL' => '/home/ubuntu/IoT_CI_Static_Analysis/firmae_demo.sh',
+        'LOG_FOLDER' => '/home/ubuntu/Logs',
     ],
 ];
