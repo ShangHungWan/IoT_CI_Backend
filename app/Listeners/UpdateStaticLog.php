@@ -4,7 +4,6 @@ namespace App\Listeners;
 
 use App\Events\ApplicationEmulated;
 use App\Repositories\Interfaces\AnalysisRepositoryInterface;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UpdateStaticLog
@@ -30,12 +29,21 @@ class UpdateStaticLog
     public function handle(ApplicationEmulated $event)
     {
         $uuid = $event->analysis->uuid;
-        foreach (Storage::disk('log')->files("{$uuid}/static/", true) as $file) {
-            Log::debug($file);
-            $name = Storage::name($file);
-            // str_split($name, strlen($name) - 3)[0]
-            // ;
-            // Storage::extension($file);
+        foreach (Storage::files("logs/{$uuid}/static/", true) as $file) {
+            $filename = explode('/', $file, 4)[3];
+            $name = str_split($filename, strlen($filename) - 4)[0];
+            $contents = explode("\n", Storage::get($file));
+
+            for ($i = 0; $i < floor(count($contents) / 8); $i++) {
+                $this->analysis_repository->createManyStatic($event->analysis, "file/{$uuid}/{$name}", [
+                    'line_number' => $contents[8 * $i + 1],
+                    'callstack' => $contents[8 * $i + 2],
+                    'severity' => $contents[8 * $i + 3],
+                    'message' => $contents[8 * $i + 4],
+                    'warning_type' => $contents[8 * $i + 5],
+                    'code' => $contents[8 * $i + 6],
+                ]);
+            }
         }
     }
 }

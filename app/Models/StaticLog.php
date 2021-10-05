@@ -16,7 +16,7 @@ class StaticLog extends Model
         'callstack',
         'severity',
         'message',
-        'warning_id',
+        'warning_type',
         'code',
     ];
 }

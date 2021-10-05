@@ -42,11 +42,6 @@ return [
             'visibility' => 'public',
         ],
 
-        'log' => [
-            'driver' => 'local',
-            'root' => config('iotci.path.LOG_FOLDER'),
-        ],
-
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

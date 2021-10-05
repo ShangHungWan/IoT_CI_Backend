@@ -32,9 +32,20 @@ class AnalysisRepository extends BaseRepository implements AnalysisRepositoryInt
         return $model;
     }
 
-    public function createManyCreds(Model $model, array $exploits): Model
+    public function createManyCreds(Model $model, array $creds): Model
     {
-        $model->credsLogs()->createMany($exploits);
+        $model->credsLogs()->createMany($creds);
+        return $model;
+    }
+
+    public function createManyStatic(Model $model, string $path, array $attributes): Model
+    {
+        $model
+            ->files()
+            ->where('path', $path)
+            ->first()
+            ->static_logs()
+            ->create($attributes);
         return $model;
     }
 }

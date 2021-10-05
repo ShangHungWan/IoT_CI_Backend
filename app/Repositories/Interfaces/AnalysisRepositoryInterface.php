@@ -8,5 +8,6 @@ interface AnalysisRepositoryInterface extends EloquentRepositoryInterface
 {
     public function createManyFiles(Model $model, array $files): Model;
     public function createManyExploits(Model $model, array $exploits): Model;
-    public function createManyCreds(Model $model, array $exploits): Model;
+    public function createManyCreds(Model $model, array $creds): Model;
+    public function createManyStatic(Model $model, string $path, array $attributes): Model;
 }
