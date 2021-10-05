@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\ApplicationEmulated;
 use App\Events\FileUploaded;
 use App\Listeners\ExecuteAnalyses;
+use App\Listeners\UpdateStaticLog;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         FileUploaded::class => [
             ExecuteAnalyses::class,
+        ],
+        ApplicationEmulated::class => [
+            UpdateStaticLog::class,
         ],
     ];
 
