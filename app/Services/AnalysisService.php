@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\FileUploaded;
 use App\Models\Analysis;
 use App\Repositories\Interfaces\AnalysisRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
@@ -50,6 +51,7 @@ class AnalysisService
         }
 
         $this->analysis_repo->createManyFiles($model, $files);
+        FileUploaded::dispatch($model);
         return $model;
     }
 
