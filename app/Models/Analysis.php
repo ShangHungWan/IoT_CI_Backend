@@ -39,4 +39,9 @@ class Analysis extends Model
     {
         return $this->hasMany(CredsLog::class);
     }
+
+    public function device()
+    {
+        return $this->belongsTo(Device::class);
+    }
 }
