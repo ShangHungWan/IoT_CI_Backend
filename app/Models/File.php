@@ -16,7 +16,7 @@ class File extends Model
         'path',
     ];
 
-    public function static_logs()
+    public function staticLogs()
     {
         return $this->hasMany(StaticLog::class);
     }

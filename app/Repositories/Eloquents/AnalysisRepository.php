@@ -44,7 +44,7 @@ class AnalysisRepository extends BaseRepository implements AnalysisRepositoryInt
             ->files()
             ->where('path', $path)
             ->first()
-            ->static_logs()
+            ->staticLogs()
             ->create($attributes);
         return $model;
     }

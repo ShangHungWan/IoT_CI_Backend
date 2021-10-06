@@ -50,7 +50,7 @@ class AnalysisController extends Controller
      */
     public function show(Analysis $analysis)
     {
-        $analysis->load(['exploitsLogs', 'credsLogs']);
+        $analysis->load(['exploitsLogs', 'credsLogs', 'files.staticLogs']);
         return $analysis;
     }
 
