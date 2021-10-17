@@ -41,8 +41,8 @@ class AnalysisService
         ]);
 
         $files = [];
-        foreach ($attrributes['files'] as $file) {
-            $origin_path = $file->getClientOriginalName();
+        foreach ($attrributes['files'] as $key => $file) {
+            $origin_path = explode('/', $attrributes['filepath'][$key], 2)[1];
             $file->storeAs("file/{$uuid}", $origin_path);
             $files[] = [
                 'analysis_uuid' => $uuid,

@@ -36,6 +36,8 @@ class AnalysisController extends Controller
         $attrributes = $request->validate([
             'files' => ['required', 'array'],
             'files.*' => ['required', 'file'], // TODO: size
+            'filepath' => ['required', 'array'],
+            'filepath.*' => ['required', 'string'],
             'device_id' => ['required', 'exists:devices,id'],
         ]);
 
