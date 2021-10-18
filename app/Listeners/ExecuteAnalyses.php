@@ -53,7 +53,7 @@ class ExecuteAnalyses implements ShouldQueue
         $process->setIdleTimeout(self::TIMEOUT);
         $process->run();
 
-        if (!$process->isSuccessful()) {
+        if (!$process->isSuccessful() && $process->getErrorOutput() != self::SUCCESS) {
             Log::error('UUID: ' . $event->analysis->uuid . '\'s static analysis failed.');
             $this->analysis_repository->update($event->analysis, [
                 'status' => config('iotci.analysis.status.EMULATION_FAILED'),
