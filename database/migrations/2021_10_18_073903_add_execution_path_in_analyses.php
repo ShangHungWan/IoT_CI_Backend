@@ -14,7 +14,7 @@ class AddExecutionPathInAnalyses extends Migration
     public function up()
     {
         Schema::table('analyses', function (Blueprint $table) {
-            $table->string('execution_path', 1024);
+            $table->string('execution_path', 1024)->nullable();
         });
     }
 
