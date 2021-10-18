@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Analysis extends Model
 {
@@ -24,6 +25,11 @@ class Analysis extends Model
         'exploits_time',
         'creds_time',
     ];
+
+    public function getExecutionPathAttribute($value)
+    {
+        return Storage::url($value);
+    }
 
     public function files()
     {
