@@ -28,7 +28,7 @@ class Analysis extends Model
 
     public function getExecutionPathAttribute($value)
     {
-        return Storage::url($value);
+        return $value ? Storage::url($value) : '';
     }
 
     public function files()
