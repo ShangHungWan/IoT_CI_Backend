@@ -57,7 +57,13 @@ class AnalysisController extends Controller
             'credsLogs',
             'files.staticLogs',
             'device',
-        ]);
+        ])
+            ->loadCount([
+                'credsLogs',
+                'exploitsLogs' => function ($query) {
+                    $query->where('status', 'vulnerable');
+                },
+            ]);
         return $analysis;
     }
 

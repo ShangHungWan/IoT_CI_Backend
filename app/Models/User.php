@@ -43,6 +43,12 @@ class User extends Authenticatable
 
     public function analyses()
     {
-        return $this->hasMany(Analysis::class, 'user_id');
+        return $this->hasMany(Analysis::class, 'user_id')
+            ->withCount([
+                'credsLogs',
+                'exploitsLogs' => function ($query) {
+                    $query->where('status', 'vulnerable');
+                },
+            ]);
     }
 }
