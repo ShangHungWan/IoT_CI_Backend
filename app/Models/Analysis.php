@@ -21,7 +21,8 @@ class Analysis extends Model
         'uuid',
         'user_id',
         'device_id',
-        'status',
+        'static_status',
+        'dynamic_status',
         'exploits_time',
         'creds_time',
     ];
