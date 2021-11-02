@@ -35,7 +35,8 @@ class AnalysisService
             'uuid' => $uuid,
             'user_id' => Auth::user()->id,
             'device_id' => $attrributes['device_id'],
-            'status' => config('iotci.analysis.status.UPLOADED'),
+            'static_status' => config('iotci.analysis.status.TESTING'),
+            'dynamic_status' => config('iotci.analysis.status.TESTING'),
             'exploits_time' => -1,
             'creds_time' => -1,
         ]);
@@ -58,7 +59,7 @@ class AnalysisService
     public function createManyDynamic(Analysis $analysis, array $attrributes)
     {
         $this->analysis_repo->update($analysis, [
-            'status' => config('iotci.analysis.status.SUCCESS'),
+            'dynamic_status' => config('iotci.analysis.status.SUCCESS'),
             'exploits_time' => $attrributes['exploits']['time'],
             'creds_time' => $attrributes['creds']['time'],
         ]);

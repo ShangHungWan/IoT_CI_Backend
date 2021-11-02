@@ -5,9 +5,7 @@ return [
         'status' => [
             'SUCCESS' => 'success',
             'TESTING' => 'testing',
-            'EMULATION_FAILED' => 'emulation_failed',
-            'COMPILATION_FAILED' => 'compilation_failed',
-            'UPLOADED' => 'uploaded',
+            'FAILED' => 'failed',
         ],
     ],
 

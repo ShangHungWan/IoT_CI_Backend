@@ -13,7 +13,8 @@ use Symfony\Component\Process\Process;
 
 class ExecuteAnalyses implements ShouldQueue
 {
-    const EMLATION_FAILED = 'emulation_failed';
+    const FAILED = 'failed';
+    const EMULATION_FAILED = 'emulation_failed';
     const COMPILATION_FAILED = 'compilation_failed';
     const SUCCESS = 'success';
     const TIMEOUT = 600;
@@ -54,9 +55,21 @@ class ExecuteAnalyses implements ShouldQueue
         $process->run();
 
         if (!$process->isSuccessful() && $process->getErrorOutput() != self::SUCCESS) {
-            Log::error('UUID: ' . $event->analysis->uuid . '\'s static analysis failed.');
+            Log::error('UUID: ' . $event->analysis->uuid . ' ' . $process->getErrorOutput());
+
+            $dynamic_status = self::FAILED;
+            $static_status = null;
+
+            if ($process->getErrorOutput() === self::EMULATION_FAILED) {
+            } else if ($process->getErrorOutput() === self::COMPILATION_FAILED) {
+                $static_status = self::FAILED;
+            } else {
+                $static_status = self::FAILED;
+            }
+
             $this->analysis_repository->update($event->analysis, [
-                'status' => config('iotci.analysis.status.EMULATION_FAILED'),
+                'dynamic_status' => $dynamic_status,
+                'static_status' => $static_status,
             ]);
             throw new ProcessFailedException($process);
         }
@@ -74,22 +87,24 @@ class ExecuteAnalyses implements ShouldQueue
             ApplicationEmulated::dispatch($event->analysis);
         }
 
+        $status = $this->getStatus($output);
         $this->analysis_repository->update($event->analysis, [
-            'status' => $this->getStatus($output),
+            'static_status' => $status['static_status'],
+            'dynamic_status' => $status['dynamic_status'],
             'execution_path' => $execution_path,
         ]);
     }
 
     private function getStatus(string $message)
     {
-        if (self::EMLATION_FAILED === $message) {
-            return config('iotci.analysis.status.EMULATION_FAILED');
+        if (self::EMULATION_FAILED === $message) {
+            return ['dynamic_status' => self::FAILED, 'static_status' => self::SUCCESS];
         } else if (self::COMPILATION_FAILED === $message) {
-            return config('iotci.analysis.status.COMPILATION_FAILED');
+            return ['dynamic_status' => self::FAILED, 'static_status' => self::FAILED];
         } else if (self::SUCCESS === $message) {
-            return config('iotci.analysis.status.TESTING');
+            return ['dynamic_status' => config('iotci.analysis.status.TESTING'), 'static_status' => config('iotci.analysis.status.SUCCESS')];
         } else {
-            return config('iotci.analysis.status.EMULATION_FAILED');
+            return ['dynamic_status' => self::FAILED, 'static_status' => self::FAILED];
         }
     }
 }
