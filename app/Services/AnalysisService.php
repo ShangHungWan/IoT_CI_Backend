@@ -23,7 +23,10 @@ class AnalysisService
         if ("admin" === $user->type) {
             return $this->analysis_repo->all();
         } else if ("user" === $user->type) {
-            return Auth::user()->analyses;
+            return Auth::user()
+                ->analyses()
+                ->orderBy('created_at', 'desc')
+                ->get();
         }
     }
 
