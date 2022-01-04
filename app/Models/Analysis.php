@@ -23,6 +23,7 @@ class Analysis extends Model
         'device_id',
         'static_status',
         'dynamic_status',
+        'fuzzing_status',
         'exploits_time',
         'creds_time',
     ];

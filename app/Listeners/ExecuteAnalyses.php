@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\ApplicationEmulated;
-use App\Events\FileUploaded;
+use App\Events\CodeUploaded;
 use App\Repositories\Interfaces\AnalysisRepositoryInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
@@ -36,18 +36,18 @@ class ExecuteAnalyses implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param FileUploaded $event
+     * @param CodeUploaded $event
      * @return void
      */
-    public function handle(FileUploaded $event)
+    public function handle(CodeUploaded $event)
     {
         $process = new Process([
             'sudo',
-            config('iotci.path.STATIC_ANALYSIS_SHELL'),
+            config('enum.path.STATIC_ANALYSIS_SHELL'),
             $event->analysis->uuid,
             $event->analysis->device_id,
             base_path('storage/app/file'),
-            config('iotci.path.LOG_FOLDER'),
+            config('enum.path.LOG_FOLDER'),
             base_path("storage/app/public/execution_files"),
         ]);
         $process->setTimeout(self::TIMEOUT);
@@ -102,7 +102,7 @@ class ExecuteAnalyses implements ShouldQueue
         } else if (self::COMPILATION_FAILED === $message) {
             return ['dynamic_status' => self::FAILED, 'static_status' => self::FAILED];
         } else if (self::SUCCESS === $message) {
-            return ['dynamic_status' => config('iotci.analysis.status.TESTING'), 'static_status' => config('iotci.analysis.status.SUCCESS')];
+            return ['dynamic_status' => config('enum.analysis.status.TESTING'), 'static_status' => config('enum.analysis.status.SUCCESS')];
         } else {
             return ['dynamic_status' => self::FAILED, 'static_status' => self::FAILED];
         }

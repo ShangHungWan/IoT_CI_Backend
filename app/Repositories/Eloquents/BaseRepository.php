@@ -23,9 +23,13 @@ class BaseRepository implements EloquentRepositoryInterface
         $this->model = $model;
     }
 
-    public function all(array $columns = ['*']): Collection
+    public function all(array $columns = ['*'], array $conditions = []): Collection
     {
-        return $this->model
+        $result = $this->model;
+        foreach ($conditions as $key => $value) {
+            $result = $result->where($key, $value);
+        }
+        return $result
             ->orderBy('created_at', 'desc')
             ->get($columns);
     }

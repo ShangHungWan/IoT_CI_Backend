@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Events\ApplicationEmulated;
-use App\Events\FileUploaded;
+use App\Events\BinaryUploaded;
+use App\Events\CodeUploaded;
 use App\Listeners\ExecuteAnalyses;
+use App\Listeners\ExecuteP2IMEmulation;
 use App\Listeners\UpdateStaticLog;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -22,8 +24,11 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        FileUploaded::class => [
+        CodeUploaded::class => [
             ExecuteAnalyses::class,
+        ],
+        BinaryUploaded::class => [
+            ExecuteP2IMEmulation::class,
         ],
         ApplicationEmulated::class => [
             UpdateStaticLog::class,

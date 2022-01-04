@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 interface EloquentRepositoryInterface
 {
-    public function all(array $columns = ['*']): Collection;
+    public function all(array $columns = ['*'], array $conditions = []): Collection;
 
     public function create(array $attributes): Model;
 

@@ -34,11 +34,12 @@ class AnalysisController extends Controller
     public function store(Request $request)
     {
         $attrributes = $request->validate([
-            'files' => ['required', 'array'],
-            'files.*' => ['required', 'file'], // TODO: size
-            'filepath' => ['required', 'array'],
-            'filepath.*' => ['required', 'string'],
-            'device_id' => ['required', 'exists:devices,id'],
+            'files' => ['required_without:binary', 'array'],
+            'files.*' => ['required_without:binary', 'file'], // TODO: size
+            'filepath' => ['required_without:binary', 'array'],
+            'filepath.*' => ['required_without:binary', 'string'],
+            'device_id' => ['required:binary', 'exists:devices,id'],
+            'binary' => ['required_without:files', 'file'],
         ]);
 
         return $this->service->create($attrributes);
@@ -76,7 +77,7 @@ class AnalysisController extends Controller
             'exploits.details.*.name' => ['required'],
             'exploits.details.*.port' => ['required', 'integer'],
             'exploits.details.*.service' => ['required'],
-            'exploits.details.*.status' => ['required', Rule::in(config('iotci.exploits_logs.status'))],
+            'exploits.details.*.status' => ['required', Rule::in(config('enum.exploits_logs.status'))],
             'creds' => ['required'],
             'creds.time' => ['required', 'numeric'],
             'creds.details' => ['nullable', 'array'],
@@ -87,5 +88,18 @@ class AnalysisController extends Controller
         ]);
 
         return $this->service->createManyDynamic($analysis, $attrributes);
+    }
+
+    public function storeFuzzing(Request $request, Analysis $analysis)
+    {
+        $attrributes = $request->validate([
+            'status' => ['required', Rule::in(config('enum.analysis.status'))],
+            'message' => ['nullable', 'string'],
+            'crashes_number' => ['required', 'numeric'],
+            'hangs_number' => ['required', 'numeric'],
+            'function_coverage_rate' => ['nullable', 'string', 'min:0'],
+        ]);
+
+        return $this->service->updateFuzzing($analysis, $attrributes);
     }
 }

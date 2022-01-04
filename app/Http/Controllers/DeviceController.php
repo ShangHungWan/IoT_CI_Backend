@@ -25,6 +25,11 @@ class DeviceController extends Controller
         return $this->service->index();
     }
 
+    public function os_less_index()
+    {
+        return $this->service->index(['is_os_less' => '1']);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

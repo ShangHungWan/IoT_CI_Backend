@@ -6,6 +6,7 @@ return [
             'SUCCESS' => 'success',
             'TESTING' => 'testing',
             'FAILED' => 'failed',
+            'N/A' => 'n/a',
         ],
     ],
 
@@ -15,6 +16,7 @@ return [
             'VULNERABLE' => 'vulnerable',
             'UNABLE_VERIFIED' => 'unable_verified',
             'UNDEFINED' => 'undefined',
+            'N/A' => 'n/a',
         ],
     ],
 
@@ -27,6 +29,7 @@ return [
 
     'path' => [
         'STATIC_ANALYSIS_SHELL' => '/home/ubuntu/IoT_CI_Static_Analysis/firmae_demo.sh',
+        'P2IM_SHELL' => '/home/ubuntu/p2im/Script.py',
         'LOG_FOLDER' => '/home/ubuntu/Logs',
     ],
 ];

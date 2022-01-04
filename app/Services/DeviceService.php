@@ -13,9 +13,9 @@ class DeviceService
         $this->repo = $repo;
     }
 
-    public function index()
+    public function index(array $conditions = ['is_os_less' => '0'])
     {
-        return $this->repo->all();
+        return $this->repo->all(['*'], $conditions);
     }
 
     public function store($attubites)

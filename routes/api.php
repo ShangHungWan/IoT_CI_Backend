@@ -37,10 +37,15 @@ Route::group(['prefix' => 'analyses', 'middleware' => 'auth:sanctum'], function 
     Route::group(['prefix' => '{analysis:uuid}'], function () {
         Route::get('/', [AnalysisController::class, 'show']);
         Route::post('/dynamic', [AnalysisController::class, 'storeDynamic'])->withoutMiddleware('auth:sanctum');
+        Route::post('/fuzzing', [AnalysisController::class, 'storeFuzzing'])->withoutMiddleware('auth:sanctum');
     });
 });
 
 Route::group(['prefix' => 'devices'], function () {
     Route::get('/', [DeviceController::class, 'index']);
     Route::post('/', [DeviceController::class, 'store'])->middleware('admin');
+});
+
+Route::group(['prefix' => 'os-less-devices'], function () {
+    Route::get('/', [DeviceController::class, 'os_less_index']);
 });
