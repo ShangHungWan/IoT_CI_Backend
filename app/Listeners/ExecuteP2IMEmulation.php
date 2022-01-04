@@ -9,7 +9,7 @@ use Symfony\Component\Process\Process;
 
 class ExecuteP2IMEmulation implements ShouldQueue
 {
-    const TIMEOUT = 900;
+    const TIMEOUT = 1200;
 
     /**
      * Handle the event.
