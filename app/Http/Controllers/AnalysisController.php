@@ -20,9 +20,13 @@ class AnalysisController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->service->index();
+        $conditions = $request->validate([
+            'os_less' => ['required', 'boolean'],
+        ]);
+
+        return $this->service->index($conditions);
     }
 
     /**

@@ -51,4 +51,20 @@ class User extends Authenticatable
                 },
             ]);
     }
+
+    public function linux_based_analyses()
+    {
+        return $this->analyses()
+            ->orderBy('created_at', 'desc')
+            ->where('fuzzing_status', 'n/a')
+            ->get();
+    }
+
+    public function os_less_analyses()
+    {
+        return $this->analyses()
+            ->orderBy('created_at', 'desc')
+            ->where('static_status', 'n/a')
+            ->get();
+    }
 }

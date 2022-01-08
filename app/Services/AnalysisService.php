@@ -19,16 +19,17 @@ class AnalysisService
         $this->analysis_repo = $analysis_repo;
     }
 
-    public function index()
+    public function index(array $conditions)
     {
         $user = Auth::user();
         if ("admin" === $user->type) {
-            return $this->analysis_repo->all();
+            return $conditions['os_less'] ?
+            $this->analysis_repo->all(['*'], ['static_status' => 'n/a']) :
+            $this->analysis_repo->all(['*'], ['fuzzing_status' => 'n/a']);
         } else if ("user" === $user->type) {
-            return Auth::user()
-                ->analyses()
-                ->orderBy('created_at', 'desc')
-                ->get();
+            return $conditions['os_less'] ?
+            $user->os_less_analyses() :
+            $user->linux_based_analyses();
         }
     }
 
